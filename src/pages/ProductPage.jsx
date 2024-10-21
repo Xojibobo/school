@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getStudents, createStudent, deleteStudent, editStudent } from "../instance/StudentsInstance";
 import { Button, Form, Modal, Row } from "react-bootstrap";
-
+import image from '../assets/public/student.png';
 const ProductPage = () => {
     const navigate = useNavigate();
     const { id: teacherId } = useParams();
@@ -214,7 +214,7 @@ const ProductPage = () => {
                     students.map(student => (
                         <div key={student.id} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-3 h-100">
                             <div className="card">
-                                <img src="../public/student.png" className="card-img-top" alt="Student" />
+                                <img src={image} className="card-img-top" alt="Student" />
                                 <div className="card-body">
                                     <h5 className="card-title">{student.firstName} {student.lastName}</h5>
                                     <p className="card-text"><span className="fw-bold">Phone:</span> {student.phoneNumber}</p>

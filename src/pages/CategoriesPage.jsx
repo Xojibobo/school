@@ -4,6 +4,8 @@ import { getTeachers, createTeacher, updateTeacher, deleteTeacher } from "../ins
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { Form, Row } from "react-bootstrap";
+import image from '../assets/public/teacher.png';
+
 
 const CategoriesPage = () => {
     const navigate = useNavigate();
@@ -199,7 +201,7 @@ const CategoriesPage = () => {
                 {teachers.map(teacher => (
                     <div key={teacher.id} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-3 h-100">
                         <div className="card">
-                            <img src="../public/teacher.png" className="card-img-top" alt="..." />
+                            <img src={image} className="card-img-top" alt="..." />
                             <div className="card-body">
                                 <h5 className="card-title">{teacher.firstName} {teacher.lastName}</h5>
                                 <p className="card-text"><span className="fw-bold">Phone:</span> {teacher.phoneNumber}</p>
