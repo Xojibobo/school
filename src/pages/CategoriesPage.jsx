@@ -4,8 +4,7 @@ import { getTeachers, createTeacher, updateTeacher, deleteTeacher } from "../ins
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { Form, Row } from "react-bootstrap";
-import image from '../assets/public/teacher.png';
-
+import image from '../assets/teacher.png'
 
 const CategoriesPage = () => {
     const navigate = useNavigate();
@@ -15,6 +14,7 @@ const CategoriesPage = () => {
     const [show, setShow] = useState(false);
     const [validated, setValidated] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
+    const [searchTerm, setSearchTerm] = useState(""); // Add this line
     const [newTeacher, setNewTeacher] = useState({
         id: null,
         firstName: '',
@@ -39,7 +39,6 @@ const CategoriesPage = () => {
         setValidated(false);
         setIsEdit(false);
     };
-
 
     useEffect(() => {
         if (!localStorage.getItem('token')) {
@@ -68,6 +67,11 @@ const CategoriesPage = () => {
         return <p>{error}</p>;
     }
 
+    const filteredTeachers = teachers.filter(teacher =>
+        teacher.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        teacher.lastName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     const handleSubmit = async (event) => {
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
@@ -85,7 +89,6 @@ const CategoriesPage = () => {
                     console.log("Failed to update teacher:", error);
                 }
             } else {
-
                 try {
                     const response = await createTeacher(newTeacher);
                     setTeachers([...teachers, response.data]);
@@ -129,11 +132,16 @@ const CategoriesPage = () => {
             <div className="row d-flex justify-content-center my-3">
                 <div className="col-12 col-md-6">
                     <div className="input-group">
-                        <input type="text" className="form-control" placeholder="Search" />
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Search"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)} // Update searchTerm on input change
+                        />
                         <Button variant="primary" onClick={() => { setShow(true); resetForm(); }}>
                             Create teacher
                         </Button>
-
                         <Modal show={show} onHide={handleClose}>
                             <Modal.Header closeButton>
                                 <Modal.Title>{isEdit ? "Edit Teacher" : "Create New Teacher"}</Modal.Title>
@@ -198,7 +206,7 @@ const CategoriesPage = () => {
                 </div>
             </div>
             <div className="row mt-5">
-                {teachers.map(teacher => (
+                {filteredTeachers.map(teacher => (
                     <div key={teacher.id} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-3 h-100">
                         <div className="card">
                             <img src={image} className="card-img-top" alt="..." />
@@ -206,7 +214,7 @@ const CategoriesPage = () => {
                                 <h5 className="card-title">{teacher.firstName} {teacher.lastName}</h5>
                                 <p className="card-text"><span className="fw-bold">Phone:</span> {teacher.phoneNumber}</p>
                                 <div>
-                                    <Link to={'/products/' + teacher.id} className="btn btn-primary me-2">View</Link>
+                                    <Link to={'/products/' + teacher.id} className="btn btn-primary me-2">Student</Link>
                                     <Button className="btn btn-warning me-2" onClick={() => handleEditClick(teacher)}>Edit</Button>
                                     <Button className="btn btn-danger" onClick={() => handleDeleteClick(teacher.id)}>Delete</Button>
                                 </div>

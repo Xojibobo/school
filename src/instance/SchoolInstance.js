@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const BASE_URL = 'https://670e4ba0073307b4ee464482.mockapi.io';
 
+
 export const getTeachers = () => {
     return axios.get(`${BASE_URL}/teachers`);
 };

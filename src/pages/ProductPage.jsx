@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getStudents, createStudent, deleteStudent, editStudent } from "../instance/StudentsInstance";
 import { Button, Form, Modal, Row } from "react-bootstrap";
-import image from '../assets/public/student.png';
+import image from '../assets/student.png';
+
 const ProductPage = () => {
     const navigate = useNavigate();
     const { id: teacherId } = useParams();
@@ -11,6 +12,7 @@ const ProductPage = () => {
     const [error, setError] = useState(null);
     const [show, setShow] = useState(false);
     const [validated, setValidated] = useState(false);
+    const [searchQuery, setSearchQuery] = useState(""); // New search query state
     const [newStudent, setNewStudent] = useState({
         firstName: '',
         lastName: '',
@@ -45,6 +47,7 @@ const ProductPage = () => {
         setShow(false);
         resetForm();
     };
+
     const handleShow = () => setShow(true);
 
     const handleSubmit = async (event) => {
@@ -65,7 +68,7 @@ const ProductPage = () => {
                 resetForm();
                 setShow(false);
             } catch (error) {
-                console.error("Xato:", error);
+                console.error("Error:", error);
             }
         }
 
@@ -90,9 +93,16 @@ const ProductPage = () => {
             await deleteStudent(teacherId, studentId);
             setStudents(students.filter(student => student.id !== studentId));
         } catch (error) {
-            console.error("O'quvchini o'chirishda xato:", error);
+            console.error("Error deleting student:", error);
         }
     };
+
+    const filteredStudents = students.filter(
+        student =>
+            student.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            student.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            student.phoneNumber.includes(searchQuery)
+    );
 
     useEffect(() => {
         if (!localStorage.getItem('token')) {
@@ -129,7 +139,13 @@ const ProductPage = () => {
             <div className="row d-flex justify-content-center my-3">
                 <div className="col-12 col-md-6">
                     <div className="input-group">
-                        <input type="text" className="form-control" placeholder="Search" />
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Search"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)} // Update search query
+                        />
                         <Button variant="primary" onClick={handleShow}>
                             Add Student
                         </Button>
@@ -199,7 +215,7 @@ const ProductPage = () => {
                                 <Form.Check
                                     label="Are you working"
                                     name="isWorking"
-                                    value={newStudent.isWorking}
+                                    checked={newStudent.isWorking}
                                     onChange={handleCheckboxChange}
                                 />
                             </Form.Group>
@@ -210,8 +226,8 @@ const ProductPage = () => {
                 <Modal.Footer></Modal.Footer>
             </Modal>
             <div className="row mt-5">
-                {students.length > 0 ? (
-                    students.map(student => (
+                {filteredStudents.length > 0 ? (
+                    filteredStudents.map(student => (
                         <div key={student.id} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-3 h-100">
                             <div className="card">
                                 <img src={image} className="card-img-top" alt="Student" />

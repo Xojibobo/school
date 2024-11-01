@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; // Toastify uslublari
-import 'bootstrap/dist/css/bootstrap.min.css';  // Bootstrap uslublari
+import 'react-toastify/dist/ReactToastify.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
